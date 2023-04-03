@@ -341,11 +341,7 @@ class BaselineFunctionalTests(testtools.TestCase):
         # candidate #6
         self.assertIn(candidate_example_six, return_value)
 
-def test_new_candidates(self):
-    """Tests when there are new candidates found
-    Test that bandit returns the new candidates found compared with those
-    in the baseline.
-    """
+def test_new_candidates_found():
     baseline_report_files = {
         "new_candidates-all.py": "new_candidates-all.py"
     }
@@ -364,10 +360,13 @@ def test_new_candidates(self):
         target_directory, baseline_report
     )
     # assert there were new results (new candidates found)
+    new_candidates_all_total_lines = "new_candidates_all_total_lines"
+    new_candidates_skip_nosec_lines = "new_candidates_skip_nosec_lines"
+    baseline_no_issues_found = "baseline_no_issues_found"
+    baseline_no_skipped_files = "baseline_no_skipped_files"
     self.assertEqual(1, return_code)
     self.assertIn(new_candidates_all_total_lines, return_value)
     self.assertIn(new_candidates_skip_nosec_lines, return_value)
     self.assertIn("subprocess.check_output(['ls'])", return_value)
     self.assertNotIn(baseline_no_issues_found, return_value)
     self.assertNotIn(baseline_no_skipped_files, return_value)
-
