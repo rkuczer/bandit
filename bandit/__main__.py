@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: Apache-2.0 - t
 """Bandit is a tool designed to find common security issues in Python code.
 
 Bandit is a tool designed to find common security issues in Python code.
