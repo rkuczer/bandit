@@ -4,7 +4,6 @@
 import os
 import shutil
 import subprocess
-import json
 import pandas as pd
 import numpy as np
 import fixtures
@@ -343,19 +342,22 @@ class BaselineFunctionalTests(testtools.TestCase):
         # candidate #6
         self.assertIn(candidate_example_six, return_value)
 
-    def test_new_candidates_found():
-        baseline = ["candidate_1", "candidate_2", "candidate_3"]
-        new_candidates = ["candidate_1", "candidate_2", "candidate_3", "candidate_4", "candidate_5"]
-        result = find_issues(baseline, new_candidates)
-        assert result == ["candidate_1", "candidate_2", "candidate_3", "candidate_4", "candidate_5"]
-    
-    def test_candidate_with_nosec_comment():
-        baseline = ["candidate_1", "candidate_2", "candidate_3"]
-        new_candidates = ["candidate_1 # nosec", "candidate_2", "candidate_3"]
-        result = find_issues(baseline, new_candidates)
-        assert result == ["candidate_2", "candidate_3"]
-    def test_candidate_fixed():
-         baseline = ["candidate_1", "candidate_2", "candidate_3"]
-        new_candidates = ["candidate_1", "candidate_3"]
-        result = find_issues(baseline, new_candidates)
-        assert result == ["candidate_3"]
+   def test_baseline_skip_nosec_lines(self):
+    """Test whether the baseline report contains the correct number of skipped lines"""
+    baseline_report_files = {
+        "new_candidates-all.py": "new_candidates-all.py"
+    }
+    target_directory, baseline_code = self._create_baseline(
+        baseline_report_files
+    )
+    # assert the initial baseline found results
+    self.assertEqual(1, baseline_code)
+    baseline_report = os.path.join(
+        target_directory, self.baseline_report_file
+    )
+    return_value, return_code = self._run_bandit_baseline(
+        target_directory, baseline_report
+    )
+    # assert there were no new candidates found
+    self.assertEqual(0, return_code)
+    self.assertIn(new_candidates_skip_nosec_lines, return_value)
