@@ -70,7 +70,18 @@ SIMPLE_SQL_RE = re.compile(
 )
 
 
+
 def _check_string(data):
+    sql_patterns = [
+        r"(select\s.*from\s|"
+        r"delete\s+from\s|"
+        r"insert\s+into\s.*values\s|"
+        r"update\s.*set\s)",
+        r"\bdrop\s+table\s+.*\b",
+        r"\bunion\b",
+        # add more SQL injection patterns here
+    ]
+    return any(re.search(pattern, data, re.IGNORECASE | re.DOTALL) for pattern in sql_patterns)
     return SIMPLE_SQL_RE.search(data) is not None
 
 
@@ -104,6 +115,15 @@ def _evaluate_ast(node):
         if substrings and node == substrings[0]:
             statement = "".join([str(child.s) for child in substrings])
             wrapper = node._bandit_parent._bandit_parent
+
+    #if (
+            #isinstance(wrapper, ast.Call) and
+            #isinstance(wrapper.func, ast.Attribute) and
+            #wrapper.func.attr in ["execute", "executemany"]
+    #):
+        #return (True, statement)
+    #else:
+        #return (False, statement)
 
     if isinstance(wrapper, ast.Call):  # wrapped in "execute" call?
         names = ["execute", "executemany"]
