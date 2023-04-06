@@ -342,3 +342,21 @@ class UtilTests(testtools.TestCase):
 
     def test_check_ast_node_bad_type(self):
         self.assertRaises(TypeError, b_utils.check_ast_node, "walk")
+
+    def test_get_nosec(self):
+        # prepare the input data
+        nosec_lines = {
+            3: '        aws_access_key_id=\'key_goes_here\',\n',
+            4: '        aws_secret_access_key=\'secret_goes_here\',\n',
+            5: '        endpoint_url=\'s3.amazonaws.com\',\n',
+            7: '# nosec B108\n',
+            8: '# nosec B108\n'
+        }
+        context = {
+            'lineno': 0,
+            'linerange': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }
+        # execute the function being tested
+        result = b_utils.get_nosec(nosec_lines, context)
+        # assert that the expected result is returned
+        self.assertEqual(result, "# nosec B106")
