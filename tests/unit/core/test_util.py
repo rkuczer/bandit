@@ -344,19 +344,22 @@ class UtilTests(testtools.TestCase):
         self.assertRaises(TypeError, b_utils.check_ast_node, "walk")
 
     def test_get_nosec(self):
-        # prepare the input data
-        nosec_lines = {
-            3: '        aws_access_key_id=\'key_goes_here\',\n',
-            4: '        aws_secret_access_key=\'secret_goes_here\',\n',
-            5: '        endpoint_url=\'s3.amazonaws.com\',\n',
-            7: '# nosec B108\n',
-            8: '# nosec B108\n'
-        }
-        context = {
-            'lineno': 0,
-            'linerange': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        }
-        # execute the function being tested
-        result = b_utils.get_nosec(nosec_lines, context)
-        # assert that the expected result is returned
-        self.assertEqual(result, "# nosec B106")
+        # Test case 1: no #nosec comments
+        nosec_lines = {}
+        context = {"lineno": 10, "linerange": [5, 15]}
+        self.assertIsNone(b_utils.get_nosec(nosec_lines, context))
+
+        # Test case 2: #nosec comment on lineno
+        nosec_lines = {10: "B106"}
+        context = {"lineno": 10, "linerange": [5, 15]}
+        self.assertEqual(b_utils.get_nosec(nosec_lines, context), "B106")
+
+        # Test case 3: #nosec comment on a line within linerange
+        nosec_lines = {12: "B106"}
+        context = {"lineno": 10, "linerange": [5, 15]}
+        self.assertEqual(b_utils.get_nosec(nosec_lines, context), "B106")
+
+        # Test case 4: #nosec comment outside linerange
+        nosec_lines = {3: "B106"}
+        context = {"lineno": 10, "linerange": [5, 15]}
+        self.assertIsNone(b_utils.get_nosec(nosec_lines, context))
