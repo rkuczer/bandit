@@ -18,6 +18,7 @@ class TestGetNosec(unittest.TestCase):
 
         # Mock the expected result
         expected_result = {15: "# nosec B303"}
+        print(expected_result)
 
         # Call the function and check the result
         result = get_nosec(nosec_lines, context)
@@ -37,6 +38,7 @@ class TestGetNosec(unittest.TestCase):
 
         # Mock the expected result
         expected_result = "# nosec B303"
+        print(expected_result)
 
         # Call the function and check the result
         result = get_nosec(nosec_lines, context)
