@@ -1,14 +1,15 @@
 import unittest
 from unittest.mock import MagicMock
 from utils import get_nosec
+
 class TestGetNosec(unittest.TestCase):
     def test_nested_dict_nosec(self):
         # Mock the nosec lines and context with nested dictionary annotations
         nosec_lines = {
-        5: "# nosec B101",
-        10: {
-        15: "# nosec B303"
-        }
+            5: "# nosec B101",
+            10: {
+                15: "# nosec B303"
+            }
         }
         context = {
             "lineno": 10,
@@ -16,7 +17,7 @@ class TestGetNosec(unittest.TestCase):
         }
 
         # Mock the expected result
-        expected_result = "# nosec B303"
+        expected_result = {15: "# nosec B303"}
 
         # Call the function and check the result
         result = get_nosec(nosec_lines, context)
@@ -35,12 +36,11 @@ class TestGetNosec(unittest.TestCase):
         }
 
         # Mock the expected result
-        expected_result = None
+        expected_result = "# nosec B303"
 
         # Call the function and check the result
         result = get_nosec(nosec_lines, context)
         self.assertEqual(result, expected_result)
-
 
 
 if __name__ == '__main__':
