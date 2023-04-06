@@ -4,8 +4,7 @@
 import os
 import shutil
 import subprocess
-import pandas as pd
-import numpy as np
+
 import fixtures
 import testtools
 
@@ -29,7 +28,6 @@ candidate_example_six = "xml.sax.make_parser() # nosec"
 class BaselineFunctionalTests(testtools.TestCase):
 
     """Functional tests for Bandit baseline.
-
     This set of tests is used to verify that the baseline comparison handles
     finding and comparing results appropriately. The only comparison is the
     number of candidates per file, meaning that any candidates found may
@@ -45,7 +43,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def _run_bandit_baseline(self, target_directory, baseline_file):
         """A helper method to run bandit baseline
-
         This method will run the bandit baseline test provided an existing
         baseline report and the target directory containing the content to be
         tested.
@@ -66,7 +63,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def _create_baseline(self, baseline_paired_files):
         """A helper method to create a baseline to use during baseline test
-
         This method will run bandit to create an initial baseline that can
         then be used during the bandit baseline test. Since the file contents
         of the baseline report can be extremely dynamic and difficult to create
@@ -116,7 +112,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_no_new_candidates(self):
         """Tests when there are no new candidates
-
         Test that bandit returns no issues found, as there are no new
         candidates found compared with those found from the baseline.
         """
@@ -143,7 +138,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_no_existing_no_new_candidates(self):
         """Tests when there are no new or existing candidates
-
         Test file with no existing candidates from baseline and no new
         candidates.
         """
@@ -168,7 +162,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_no_existing_with_new_candidates(self):
         """Tests when there are new candidates and no existing candidates
-
         Test that bandit returns issues found in file that had no existing
         candidates from baseline but now contain candidates.
         """
@@ -203,7 +196,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_existing_and_new_candidates(self):
         """Tests when tere are new candidates and existing candidates
-
         Test that bandit returns issues found in file with existing
         candidates. The new candidates should be returned in this case.
         """
@@ -235,7 +227,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_no_new_candidates_include_nosec(self):
         """Test to check nosec references with no new candidates
-
         Test that nosec references are included during a baseline test, which
         would normally be ignored. In this test case, there are no new
         candidates even while including the nosec references.
@@ -264,7 +255,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_new_candidates_include_nosec_only_nosecs(self):
         """Test to check nosec references with new only nosec candidates
-
         Test that nosec references are included during a baseline test, which
         would normally be ignored. In this test case, there are new candidates
         which are specifically nosec references.
@@ -301,7 +291,6 @@ class BaselineFunctionalTests(testtools.TestCase):
 
     def test_new_candidates_include_nosec_new_nosecs(self):
         """Test to check nosec references with new candidates, including nosecs
-
         Test that nosec references are included during a baseline test, which
         would normally be ignored. In this test case, there are new candidates
         that also includes new nosec references as well.
@@ -341,23 +330,3 @@ class BaselineFunctionalTests(testtools.TestCase):
         self.assertIn(candidate_example_five, return_value)
         # candidate #6
         self.assertIn(candidate_example_six, return_value)
-
-   def test_baseline_skip_nosec_lines(self):
-    """Test whether the baseline report contains the correct number of skipped lines"""
-    baseline_report_files = {
-        "new_candidates-all.py": "new_candidates-all.py"
-    }
-    target_directory, baseline_code = self._create_baseline(
-        baseline_report_files
-    )
-    # assert the initial baseline found results
-    self.assertEqual(1, baseline_code)
-    baseline_report = os.path.join(
-        target_directory, self.baseline_report_file
-    )
-    return_value, return_code = self._run_bandit_baseline(
-        target_directory, baseline_report
-    )
-    # assert there were no new candidates found
-    self.assertEqual(0, return_code)
-    self.assertIn(new_candidates_skip_nosec_lines, return_value)
