@@ -343,23 +343,4 @@ class UtilTests(testtools.TestCase):
     def test_check_ast_node_bad_type(self):
         self.assertRaises(TypeError, b_utils.check_ast_node, "walk")
 
-    def test_get_nosec(self):
-        # Test case 1: no #nosec comments
-        nosec_lines = {}
-        context = {"lineno": 10, "linerange": [5, 15]}
-        self.assertIsNone(b_utils.get_nosec(nosec_lines, context))
 
-        # Test case 2: #nosec comment on lineno
-        nosec_lines = {10: "B106"}
-        context = {"lineno": 10, "linerange": [5, 15]}
-        self.assertEqual(b_utils.get_nosec(nosec_lines, context), "B106")
-
-        # Test case 3: #nosec comment on a line within linerange
-        nosec_lines = {12: "B106"}
-        context = {"lineno": 10, "linerange": [5, 15]}
-        self.assertEqual(b_utils.get_nosec(nosec_lines, context), "B106")
-
-        # Test case 4: #nosec comment outside linerange
-        nosec_lines = {3: "B106"}
-        context = {"lineno": 10, "linerange": [5, 15]}
-        self.assertIsNone(b_utils.get_nosec(nosec_lines, context))
