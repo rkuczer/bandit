@@ -1,6 +1,6 @@
-from bandit.core.utils import get_nosec
-
 import unittest
+
+from bandit.core.utils import get_nosec
 
 
 class TestGetNosec(unittest.TestCase):
