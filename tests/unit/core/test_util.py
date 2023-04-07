@@ -192,7 +192,6 @@ class UtilTests(testtools.TestCase):
 
     def test_get_module_qualname_from_path_rel_syms(self):
         """Test get_module_qualname_from_path with symbolic relative paths."""
-
         name = b_utils.get_module_qualname_from_path(
             os.path.join(
                 self.reltempdir, "syms", "a", "bsym", "c", "test_typical.py"
@@ -342,5 +341,3 @@ class UtilTests(testtools.TestCase):
 
     def test_check_ast_node_bad_type(self):
         self.assertRaises(TypeError, b_utils.check_ast_node, "walk")
-
-
