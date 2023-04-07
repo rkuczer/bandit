@@ -1,4 +1,5 @@
 from bandit.core.utils import get_nosec
+
 import unittest
 
 
