@@ -1,6 +1,7 @@
 from bandit.core.utils import get_nosec
 import unittest
 
+
 class TestGetNosec(unittest.TestCase):
     def test_nested_dict_nosec(self):
         # Mock the nosec lines and context with nested dictionary annotations
