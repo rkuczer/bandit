@@ -11,10 +11,9 @@ import sys
 import textwrap
 
 import bandit
-from bandit.core import config as b_config
+from bandit.core import config as b_config, utils
 from bandit.core import constants
 from bandit.core import manager as b_manager
-from bandit.core import utils
 
 BASE_CONFIG = "bandit.yaml"
 LOG = logging.getLogger()

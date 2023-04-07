@@ -10,8 +10,7 @@ from unittest import mock
 import fixtures
 import testtools
 
-from bandit.core import config
-from bandit.core import utils
+from bandit.core import config, utils
 
 
 class TempFile(fixtures.Fixture):

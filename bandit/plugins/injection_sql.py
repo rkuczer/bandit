@@ -57,9 +57,8 @@ import ast
 import re
 
 import bandit
-from bandit.core import issue
+from bandit.core import issue, utils
 from bandit.core import test_properties as test
-from bandit.core import utils
 
 SIMPLE_SQL_RE = re.compile(
     r"(select\s.*from\s|"

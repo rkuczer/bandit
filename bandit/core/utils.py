@@ -372,10 +372,33 @@ def check_ast_node(name):
     raise TypeError("Error: %s is not a valid node type in AST" % name)
 
 
+#def get_nosec(nosec_lines, context):
+    #for lineno in [context["lineno"]] + context["linerange"]:
+        #nosec = nosec_lines.get(lineno)
+       # if nosec is not None:
+            #return nosec
+    #return None
+
+
 def get_nosec(nosec_lines, context):
-    for lineno in [context["lineno"]] + context["linerange"]:
-        nosec = nosec_lines.get(lineno)
-        if nosec is not None:
-            return nosec
+    lineno = context["lineno"]
+    linerange = context["linerange"]
+    if not nosec_lines:
+        return None
+    if lineno in nosec_lines:
+        return nosec_lines[lineno]
+    for i in range(linerange[0], lineno):
+        if i in nosec_lines:
+            node = get_ast_node(context, lineno - i)
+            if node:
+                if node.parent and node.parent.parent is None:
+                    return nosec_lines[i]
     return None
 
+def get_ast_node(context, depth):
+    node = context["node"]
+    for i in range(depth):
+        node = node.parent
+        if not node:
+            return None
+    return node

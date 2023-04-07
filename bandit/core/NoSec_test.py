@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import MagicMock
-from utils import get_nosec
+from bandit.core.utils import get_nosec
+
 
 class TestGetNosec(unittest.TestCase):
     def test_nested_dict_nosec(self):
@@ -47,3 +47,4 @@ class TestGetNosec(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
