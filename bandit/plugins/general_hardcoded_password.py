@@ -9,11 +9,12 @@ import bandit
 from bandit.core import issue
 from bandit.core import test_properties as test
 
-
 RE_WORDS = "(pas+wo?r?d|pass(phrase)?|pwd|token|secrete?)"
 RE_CANDIDATES = re.compile(
     "(^{0}$|_{0}_|^{0}_|_{0}$)".format(RE_WORDS), re.IGNORECASE
 )
+
+PASSWORD_STRINGS = re.compile(RE_WORDS, re.IGNORECASE)
 
 
 def _report(value, node):
@@ -23,13 +24,11 @@ def _report(value, node):
             confidence=bandit.MEDIUM,
             cwe=issue.Cwe.HARD_CODED_PASSWORD,
             text=("Possible hardcoded password: '%s'" % value),
-            #lineno=node.lineno,
-            #filename=node.col_offset,
-            lineno= node.col_offset,  # updated parameter
-            filename= node.lineno,  # updated parameter
+            lineno=node.lineno,
+            filename=node.col_offset,
+
         )
     )
-
 
 
 @test.checks("Str")
@@ -89,47 +88,48 @@ def hardcoded_password_string(context, _file):
     node = context.node
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
         return _report(node.value)
+
+    if isinstance(node, ast.Str):
+        string_node = node
+    elif isinstance(node, ast.Subscript) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+        string_node = node.value
+    elif isinstance(node, ast.JoinedStr):
+        string_node = node.values[0]
+
+    if not isinstance(string_node, ast.Str):
+        return
+
+    string_value = string_node.s
+
     if isinstance(node._bandit_parent, ast.Assign):
         # looks for "candidate='some_string'"
         for targ in node._bandit_parent.targets:
             if isinstance(targ, ast.Name) and RE_CANDIDATES.search(targ.id):
                 return _report(node.s)
             elif isinstance(targ, ast.Attribute) and RE_CANDIDATES.search(
-                targ.attr
+                    targ.attr
             ):
                 return _report(node.s)
 
-    #elif isinstance(node.value, ast.Str):
-        #if 'typing' in _file.file_path:
-            #for ancestor in node.ancestors:
-                #if isinstance(ancestor, ast.FunctionDef) and ancestor.name == 'reveal_type':
-                    #return
-            #if 'password' in node.value.s.lower():
-                #return bandit.Issue(
-                    #severity=bandit.HIGH,
-                    #confidence=bandit.MEDIUM,
-                    #text=("Possible hardcoded password string: %s" % node.value.s),
-                    #lineno=node.lineno,
-                #)
     elif isinstance(
-        node._bandit_parent, ast.Subscript
+            node._bandit_parent, ast.Subscript
     ) and RE_CANDIDATES.search(node.s):
         # Py39+: looks for "dict[candidate]='some_string'"
         # subscript -> index -> string
         assign = node._bandit_parent._bandit_parent
         if isinstance(assign, ast.Assign) and isinstance(
-            assign.value, ast.Str
+                assign.value, ast.Str
         ):
             return _report(assign.value.s)
 
     elif isinstance(node._bandit_parent, ast.Index) and RE_CANDIDATES.search(
-        node.s
+            node.s
     ):
         # looks for "dict[candidate]='some_string'"
         # assign -> subscript -> index -> string
         assign = node._bandit_parent._bandit_parent._bandit_parent
         if isinstance(assign, ast.Assign) and isinstance(
-            assign.value, ast.Str
+                assign.value, ast.Str
         ):
             return _report(assign.value.s)
 
@@ -257,7 +257,7 @@ def hardcoded_password_default(context):
 
     # this pads the list of default values with "None" if nothing is given
     defs = [None] * (
-        len(context.node.args.args) - len(context.node.args.defaults)
+            len(context.node.args.args) - len(context.node.args.defaults)
     )
     defs.extend(context.node.args.defaults)
 

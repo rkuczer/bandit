@@ -15,13 +15,20 @@ def someFunction2(password):
         print("OK, logged in")
 
 def noMatch(password):
-    # Possible hardcoded password: ''
+    # Possible hardcoded password: 'foo'
     # Severity: Low   Confidence: Medium
-    if password == '':
-        print("No password!")
+    if password == 'foo':
+        print("No Wrong!")
 
 def NoMatch2(password):
     # Possible hardcoded password: 'ajklawejrkl42348swfgkg'
+    # Severity: Low   Confidence: Medium
+    if password == "ajklawejrkl42348swfgkg":
+        print("Nice password!")
+
+
+def NoMatch3(password):
+    # Possible hardcoded password: ''
     # Severity: Low   Confidence: Medium
     if password == "ajklawejrkl42348swfgkg":
         print("Nice password!")
@@ -68,3 +75,9 @@ my_secret_password_for_email = 'd6s$f9g!j8mg7hw?n&2'
 # Possible hardcoded password: '1234'
 # Severity: Low   Confidence: Medium
 passphrase='1234'
+
+
+#Possible hardcoded password: 'my_hardcoded_password'
+#Severity: Low Confidence: Medium
+pass22 = "my_hardcoded_password"
+
