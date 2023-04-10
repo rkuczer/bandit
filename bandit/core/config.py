@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import logging
+
 import sys
 import configparser
 
@@ -17,10 +18,8 @@ else:
     except ImportError:
         tomllib = None
 
-from bandit.core import constants
+from bandit.core import constants, utils
 from bandit.core import extension_loader
-from bandit.core import utils
-
 
 LOG = logging.getLogger(__name__)
 

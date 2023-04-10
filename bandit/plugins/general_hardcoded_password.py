@@ -16,18 +16,25 @@ RE_CANDIDATES = re.compile(
 )
 
 
-def _report(value):
-    return bandit.Issue(
-        severity=bandit.LOW,
-        confidence=bandit.MEDIUM,
-        cwe=issue.Cwe.HARD_CODED_PASSWORD,
-        text=("Possible hardcoded password: '%s'" % value),
+def _report(value, node):
+    bandit.report(
+        bandit.Issue(
+            severity=bandit.LOW,
+            confidence=bandit.MEDIUM,
+            cwe=issue.Cwe.HARD_CODED_PASSWORD,
+            text=("Possible hardcoded password: '%s'" % value),
+            #lineno=node.lineno,
+            #filename=node.col_offset,
+            lineno= node.col_offset,  # updated parameter
+            filename= node.lineno,  # updated parameter
+        )
     )
+
 
 
 @test.checks("Str")
 @test.test_id("B105")
-def hardcoded_password_string(context):
+def hardcoded_password_string(context, _file):
     """**B105: Test for use of hard-coded password strings**
 
     The use of hard-coded passwords increases the possibility of password
@@ -80,6 +87,8 @@ def hardcoded_password_string(context):
 
     """
     node = context.node
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return _report(node.value)
     if isinstance(node._bandit_parent, ast.Assign):
         # looks for "candidate='some_string'"
         for targ in node._bandit_parent.targets:
@@ -90,6 +99,18 @@ def hardcoded_password_string(context):
             ):
                 return _report(node.s)
 
+    #elif isinstance(node.value, ast.Str):
+        #if 'typing' in _file.file_path:
+            #for ancestor in node.ancestors:
+                #if isinstance(ancestor, ast.FunctionDef) and ancestor.name == 'reveal_type':
+                    #return
+            #if 'password' in node.value.s.lower():
+                #return bandit.Issue(
+                    #severity=bandit.HIGH,
+                    #confidence=bandit.MEDIUM,
+                    #text=("Possible hardcoded password string: %s" % node.value.s),
+                    #lineno=node.lineno,
+                #)
     elif isinstance(
         node._bandit_parent, ast.Subscript
     ) and RE_CANDIDATES.search(node.s):
