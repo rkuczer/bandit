@@ -5,6 +5,8 @@
 import logging
 
 import sys
+import configparser
+
 
 import yaml
 
@@ -34,43 +36,50 @@ class BanditConfig:
         """
         self.config_file = config_file
         self._config = {}
-
         if config_file:
-            try:
-                f = open(config_file, "rb")
-            except OSError:
-                raise utils.ConfigError(
-                    "Could not read config file.", config_file
-                )
-
-            if config_file.endswith(".toml"):
-                if tomllib is None:
+            if config_file.endswith(".ini"):
+                self._load_ini_config(config_file)
+            else:
+        #if config_file:
+                try:
+                    f = open(config_file, "rb")
+                except OSError:
                     raise utils.ConfigError(
-                        "toml parser not available, reinstall with toml extra",
-                        config_file,
+                        "Could not read config file.", config_file
                     )
 
-                try:
-                    with f:
-                        self._config = tomllib.load(f)["tool"]["bandit"]
-                except tomllib.TOMLDecodeError as err:
-                    LOG.error(err)
+                if config_file.endswith(".toml"):
+
+                    if tomllib is None:
+                        raise utils.ConfigError(
+                            "toml parser not available, reinstall with toml extra",
+                            config_file,
+                        )
+
+                    try:
+                        with f:
+                            self._config = tomllib.load(f)["tool"]["bandit"]
+                    except tomllib.TOMLDecodeError as err:
+                        LOG.error(err)
+                        raise utils.ConfigError("Error parsing file.", config_file)
+                else:
+                    try:
+                        with f:
+                            LOG.debug("Opening config file: %s", config_file)
+                            LOG.debug("Config file contents: %s", f.read())
+
+                            self._config = yaml.safe_load(f)
+                    except yaml.YAMLError as err:
+                        LOG.error(err)
+                        raise utils.ConfigError("Error parsing file.", config_file)
+
+                self.validate(config_file)
+
+                # valid config must be a dict
+                if not isinstance(self._config, dict):
                     raise utils.ConfigError("Error parsing file.", config_file)
-            else:
-                try:
-                    with f:
-                        self._config = yaml.safe_load(f)
-                except yaml.YAMLError as err:
-                    LOG.error(err)
-                    raise utils.ConfigError("Error parsing file.", config_file)
 
-            self.validate(config_file)
-
-            # valid config must be a dict
-            if not isinstance(self._config, dict):
-                raise utils.ConfigError("Error parsing file.", config_file)
-
-            self.convert_legacy_config()
+                self.convert_legacy_config()
 
         else:
             # use sane defaults
@@ -79,6 +88,15 @@ class BanditConfig:
 
         self._init_settings()
 
+    def _load_ini_config(self, config_file):
+        config = configparser.ConfigParser()
+        try:
+            with open(config_file) as f:
+                config.read_file(f)
+        except OSError:
+            raise utils.ConfigError("Could not read config file.", config_file)
+
+        self._config.update(config)
     def get_option(self, option_string):
         """Returns the option from the config specified by the option_string.
 
