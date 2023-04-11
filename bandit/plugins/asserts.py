@@ -52,8 +52,9 @@ use assert statements in test cases.
     CWE information added
 
 """
-import ast
 import fnmatch
+
+import re
 
 import bandit
 from bandit.core import issue
@@ -73,20 +74,15 @@ def assert_used(context, config):
         if fnmatch.fnmatch(context.filename, skip):
             return None
 
-    # Check for assert statement
-    if isinstance(context.node, ast.Assert):
-        # Check for nosec keyword
-        if "# nosec" in context.node:
-            return None
+    if re.search(r"#\s*nosec\s*$", context.code, flags=re.MULTILINE):
+        return None
 
-        return bandit.Issue(
-            severity=bandit.LOW,
-            confidence=bandit.HIGH,
-            cwe=issue.Cwe.IMPROPER_CHECK_OF_EXCEPT_COND,
-            text=(
-                "Use of assert detected. The enclosed code "
-                "will be removed when compiling to optimised byte code."
-            ),
-        )
-
-    return None
+    return bandit.Issue(
+        severity=bandit.LOW,
+        confidence=bandit.HIGH,
+        cwe=issue.Cwe.IMPROPER_CHECK_OF_EXCEPT_COND,
+        text=(
+            "Use of assert detected. The enclosed code "
+            "will be removed when compiling to optimised byte code."
+        ),
+    )
