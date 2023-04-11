@@ -54,6 +54,8 @@ use assert statements in test cases.
 """
 import fnmatch
 
+import ast
+
 import bandit
 from bandit.core import issue
 from bandit.core import test_properties as test
@@ -72,15 +74,20 @@ def assert_used(context, config):
         if fnmatch.fnmatch(context.filename, skip):
             return None
 
-    if "# nosec" in context.code:
-        return None
+    # Check for assert statement
+    if isinstance(context.node, ast.Assert):
+        # Check for nosec keyword
+        if "# nosec" in context.node:
+            return None
 
-    return bandit.Issue(
-        severity=bandit.LOW,
-        confidence=bandit.HIGH,
-        cwe=issue.Cwe.IMPROPER_CHECK_OF_EXCEPT_COND,
-        text=(
-            "Use of assert detected. The enclosed code "
-            "will be removed when compiling to optimised byte code."
-        ),
-    )
+        return bandit.Issue(
+            severity=bandit.LOW,
+            confidence=bandit.HIGH,
+            cwe=issue.Cwe.IMPROPER_CHECK_OF_EXCEPT_COND,
+            text=(
+                "Use of assert detected. The enclosed code "
+                "will be removed when compiling to optimised byte code."
+            ),
+        )
+
+    return None
