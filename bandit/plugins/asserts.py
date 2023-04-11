@@ -52,9 +52,8 @@ use assert statements in test cases.
     CWE information added
 
 """
-import fnmatch
-
 import ast
+import fnmatch
 
 import bandit
 from bandit.core import issue
