@@ -53,7 +53,6 @@ use assert statements in test cases.
 
 """
 import fnmatch
-import re
 
 import bandit
 from bandit.core import issue
@@ -72,9 +71,6 @@ def assert_used(context, config):
     for skip in config.get("skips", []):
         if fnmatch.fnmatch(context.filename, skip):
             return None
-
-    if re.search(r"#\s*nosec\s*$", context.code, flags=re.MULTILINE):
-        return None
 
     return bandit.Issue(
         severity=bandit.LOW,
