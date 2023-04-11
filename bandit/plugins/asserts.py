@@ -53,7 +53,6 @@ use assert statements in test cases.
 
 """
 import fnmatch
-
 import re
 
 import bandit
