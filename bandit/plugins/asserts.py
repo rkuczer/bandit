@@ -72,7 +72,6 @@ def assert_used(context, config):
         if fnmatch.fnmatch(context.filename, skip):
             return None
 
-
     return bandit.Issue(
         severity=bandit.LOW,
         confidence=bandit.HIGH,
