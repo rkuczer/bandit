@@ -53,7 +53,6 @@ use assert statements in test cases.
 
 """
 import fnmatch
-import re
 
 import bandit
 from bandit.core import issue
@@ -72,18 +71,14 @@ def assert_used(context, config):
     for skip in config.get("skips", []):
         if fnmatch.fnmatch(context.filename, skip):
             return None
-    else:
-        # Look for the `#nosec` comment after the assert statement
-        # and ignore if found
-        if re.search(r"assert\s.*#\s*nosec\s*$", context.string, flags=re.MULTILINE):
-            return None
-        else:
-            return bandit.Issue(
-                severity=bandit.LOW,
-                confidence=bandit.HIGH,
-                cwe=issue.Cwe.IMPROPER_CHECK_OF_EXCEPT_COND,
-                text=(
-                    "Use of assert detected. The enclosed code "
-                    "will be removed when compiling to optimised byte code."
-                ),
-            )
+
+
+    return bandit.Issue(
+        severity=bandit.LOW,
+        confidence=bandit.HIGH,
+        cwe=issue.Cwe.IMPROPER_CHECK_OF_EXCEPT_COND,
+        text=(
+            "Use of assert detected. The enclosed code "
+            "will be removed when compiling to optimised byte code."
+        ),
+    )
