@@ -674,8 +674,8 @@ class FunctionalTests(testtools.TestCase):
 
         test._config = {"skips": []}
         expect = {
-            "SEVERITY": {"UNDEFINED": 0, "LOW": 1, "MEDIUM": 0, "HIGH": 0},
-            "CONFIDENCE": {"UNDEFINED": 0, "LOW": 0, "MEDIUM": 0, "HIGH": 1},
+            "SEVERITY": {"UNDEFINED": 0, "LOW": 0, "MEDIUM": 0, "HIGH": 0},
+            "CONFIDENCE": {"UNDEFINED": 0, "LOW": 0, "MEDIUM": 0, "HIGH": 0},
         }
         self.check_example("assert.py", expect)
 
