@@ -1,6 +1,7 @@
 import unittest
 
-from bandit.plugins.asserts import assert_used, gen_config
+from bandit.plugins.asserts import assert_used
+from bandit.plugins.asserts import gen_config
 
 
 class TestAssertUsed(unittest.TestCase):
@@ -11,5 +12,5 @@ class TestAssertUsed(unittest.TestCase):
         self.assertIsNone(result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
