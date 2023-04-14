@@ -86,27 +86,27 @@ def hardcoded_password_string(context):
                 if node.s.strip():  # Check if string is not empty
                     return _report(node.s)
             elif isinstance(targ, ast.Attribute) and RE_CANDIDATES.search(
-                    targ.attr
+                targ.attr
             ):
                 if node.s.strip():
                     return _report(node.s)
 
     elif isinstance(
-            node._bandit_parent, ast.Subscript
+        node._bandit_parent, ast.Subscript
     ) and RE_CANDIDATES.search(node.s):
         assign = node._bandit_parent._bandit_parent
         if isinstance(assign, ast.Assign) and isinstance(
-                assign.value, ast.Str
+            assign.value, ast.Str
         ):
             if assign.value.s.strip():
                 return _report(assign.value.s)
 
     elif isinstance(node._bandit_parent, ast.Index) and RE_CANDIDATES.search(
-            node.s
+        node.s
     ):
         assign = node._bandit_parent._bandit_parent._bandit_parent
         if isinstance(assign, ast.Assign) and isinstance(
-                assign.value, ast.Str
+            assign.value, ast.Str
         ):
             if assign.value.s.strip():
                 return _report(assign.value.s)
