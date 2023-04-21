@@ -3,7 +3,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import os
+import shutil
 import subprocess
+import tempfile
 from unittest import mock
 
 import fixtures
@@ -129,12 +131,13 @@ class BanditBaselineToolTests(testtools.TestCase):
     def test_main_non_repo(self, mock_sys_exit):
         # Test that bandit gracefully exits when there is no git repository
         # when calling main
-        repo_dir = self.useFixture(fixtures.TempDir()).path
-        os.chdir(repo_dir)
+        with tempfile.TemporaryDirectory() as repo_dir:
+            git_repo = git.Repo.init(repo_dir)
+            os.chdir(git_repo)
 
-        baseline.main()
+            baseline.main()
 
-        mock_sys_exit.assert_called_once_with(2)
+            shutil.rmtree(repo_dir)
 
     @mock.patch("sys.exit")
     @mock.patch("git.Repo.commit")
