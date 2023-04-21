@@ -49,11 +49,11 @@ class BanditBaselineToolTests(testtools.TestCase):
         super().tearDown()
         os.chdir(self.current_directory)
 
-    @mock.patch('subprocess.check_output')
+    @mock.patch("subprocess.check_output")
     def test_bandit_baseline(self, mock_check_output):
         # Tests running bandit via the CLI (baseline) with benign and malicious
         # content
-        mock_check_output.return_value = b''
+        mock_check_output.return_value = b""
 
         repo_directory = self.useFixture(fixtures.TempDir()).path
 
@@ -125,7 +125,7 @@ class BanditBaselineToolTests(testtools.TestCase):
                 branch["expected_return"], subprocess.call(baseline_command)
             )
 
-    @mock.patch('sys.exit')
+    @mock.patch("sys.exit")
     def test_main_non_repo(self, mock_sys_exit):
         # Test that bandit gracefully exits when there is no git repository
         # when calling main
@@ -136,9 +136,11 @@ class BanditBaselineToolTests(testtools.TestCase):
 
         mock_sys_exit.assert_called_once_with(2)
 
-    @mock.patch('sys.exit')
+    @mock.patch("sys.exit")
     @mock.patch("git.Repo.commit")
-    def test_main_git_command_failure(self, mock_git_repo_commit, mock_sys_exit):
+    def test_main_git_command_failure(
+            self, mock_git_repo_commit, mock_sys_exit
+    ):
         # Test that bandit does not run when the Git command fails
         repo_directory = self.useFixture(fixtures.TempDir()).path
 
