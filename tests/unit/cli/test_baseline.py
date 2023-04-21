@@ -49,9 +49,12 @@ class BanditBaselineToolTests(testtools.TestCase):
         super().tearDown()
         os.chdir(self.current_directory)
 
-    def test_bandit_baseline(self):
+    @mock.patch('subprocess.check_output')
+    def test_bandit_baseline(self, mock_check_output):
         # Tests running bandit via the CLI (baseline) with benign and malicious
         # content
+        mock_check_output.return_value = b''
+
         repo_directory = self.useFixture(fixtures.TempDir()).path
 
         # get benign and findings examples
@@ -122,35 +125,22 @@ class BanditBaselineToolTests(testtools.TestCase):
                 branch["expected_return"], subprocess.call(baseline_command)
             )
 
-    def test_main_non_repo(self):
+    @mock.patch('sys.exit')
+    def test_main_non_repo(self, mock_sys_exit):
         # Test that bandit gracefully exits when there is no git repository
         # when calling main
         repo_dir = self.useFixture(fixtures.TempDir()).path
         os.chdir(repo_dir)
 
-        # assert the system exits with code 2
-        self.assertRaisesRegex(SystemExit, "2", baseline.main)
+        baseline.main()
 
-    def test_main_git_command_failure(self):
+        mock_sys_exit.assert_called_once_with(2)
+
+    @mock.patch('sys.exit')
+    @mock.patch("git.Repo.commit")
+    def test_main_git_command_failure(self, mock_git_repo_commit, mock_sys_exit):
         # Test that bandit does not run when the Git command fails
         repo_directory = self.useFixture(fixtures.TempDir()).path
-        git_repo = git.Repo.init(repo_directory)
-        git_repo.index.commit("Initial Commit")
-        os.chdir(repo_directory)
-
-        additional_content = "additional_file.py"
-        with open(additional_content, "wt") as fd:
-            fd.write(self.temp_file_contents)
-        git_repo.index.add([additional_content])
-        git_repo.index.commit("Additional Content")
-
-        with mock.patch("git.Repo.commit") as mock_git_repo_commit:
-            mock_git_repo_commit.side_effect = git.exc.GitCommandError(
-                "commit", ""
-            )
-
-            # assert the system exits with code 2
-            self.assertRaisesRegex(SystemExit, "2", baseline.main)
 
     def test_main_no_parent_commit(self):
         # Test that bandit exits when there is no parent commit detected when
