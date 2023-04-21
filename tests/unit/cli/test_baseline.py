@@ -139,7 +139,7 @@ class BanditBaselineToolTests(testtools.TestCase):
     @mock.patch("sys.exit")
     @mock.patch("git.Repo.commit")
     def test_main_git_command_failure(
-            self, mock_git_repo_commit, mock_sys_exit
+        self, mock_git_repo_commit, mock_sys_exit
     ):
         # Test that bandit does not run when the Git command fails
         repo_directory = self.useFixture(fixtures.TempDir()).path
