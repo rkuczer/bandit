@@ -221,7 +221,7 @@ def calc_linerange(node):
 def linerange(node):
     """Get line number range from a node."""
     if sys.version_info >= (3, 8) and hasattr(node, "lineno"):
-        return list(range(node.lineno, node.end_lineno + 1))
+        return list(range(node.lineno, node.end_lineno + 1))  # New in Python 3.8
     else:
         if hasattr(node, "_bandit_linerange_stripped"):
             lines_minmax = node._bandit_linerange_stripped
@@ -244,7 +244,7 @@ def linerange(node):
             lines_min = node.lineno
             lines_max = node.lineno
         for n in ast.iter_child_nodes(node):
-            lines_minmax = calc_linerange(n)
+            lines_minmax = linerange(n)  # Changed from calc_linerange to linerange
             lines_min = min(lines_min, lines_minmax[0])
             lines_max = max(lines_max, lines_minmax[1])
 
