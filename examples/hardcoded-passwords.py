@@ -20,6 +20,12 @@ def noMatch(password):
     if password == 'foo':
         print("No Wrong!")
 
+def noMatch7(password):
+    # Possible hardcoded password: 'foo'
+    # Severity: Low   Confidence: Medium
+    if password == 'iP0F3@s&9H_l12@XvGhj':
+        print("Wrong!")
+
 def NoMatch2(password):
     # Possible hardcoded password: 'ajklawejrkl42348swfgkg'
     # Severity: Low   Confidence: Medium
@@ -78,6 +84,9 @@ passphrase='1234'
 
 
 #Possible hardcoded password: 'my_hardcoded_password'
-#Severity: Low Confidence: Medium
+#Severity: Low Confidence: Mediums
 pass22 = "my_hardcoded_password"
 
+
+# Possible hardcoded password: iP0F3@s&9H_l12@XvGhj
+pwd = ("DATABASE=TEST;HOSTNAME=127.0.0.0;PORT=50000;UID=login;PWD=iP0F3@s&9H_l12@XvGhj", "", "")
