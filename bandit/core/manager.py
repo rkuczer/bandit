@@ -209,7 +209,8 @@ class BanditManager:
 
         for target in targets:
             if not os.path.exists(target):
-                raise FileNotFoundError(f"{target} does not exist")
+                print(f"Error: {target} does not exist")
+                sys.exit(1)
 
         # We'll mantain a list of files which are added, and ones which have
         # been explicitly excluded
