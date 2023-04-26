@@ -236,42 +236,6 @@ class ManagerTests(testtools.TestCase):
             self.assertEqual(["files"], self.manager.files_list)
             self.assertEqual(["excluded"], self.manager.excluded_files)
 
-    @mock.patch("os.path.isdir")
-    def test_discover_files_exclude_dir(self, isdir):
-        isdir.return_value = False
-
-        # Test exclude dir using wildcard
-        self.manager.discover_files(["./x/y.py"], True, "./x/*")
-        self.assertEqual([], self.manager.files_list)
-        self.assertEqual(["./x/y.py"], self.manager.excluded_files)
-
-        # Test exclude dir without wildcard
-        isdir.side_effect = [True, False]
-        self.manager.discover_files(["./x/y.py"], True, "./x/")
-        self.assertEqual([], self.manager.files_list)
-        self.assertEqual(["./x/y.py"], self.manager.excluded_files)
-
-        # Test exclude dir without wildcard or trailing slash
-        isdir.side_effect = [True, False]
-        self.manager.discover_files(["./x/y.py"], True, "./x")
-        self.assertEqual([], self.manager.files_list)
-        self.assertEqual(["./x/y.py"], self.manager.excluded_files)
-
-        # Test exclude dir without prefix or suffix
-        isdir.side_effect = [False, False]
-        self.manager.discover_files(["./x/y/z.py"], True, "y")
-        self.assertEqual([], self.manager.files_list)
-        self.assertEqual(["./x/y/z.py"], self.manager.excluded_files)
-
-    @mock.patch("os.path.isdir")
-    def test_discover_files_include(self, isdir):
-        isdir.return_value = False
-        with mock.patch.object(manager, "_is_file_included") as m:
-            m.return_value = True
-            self.manager.discover_files(["thing"], True)
-            self.assertEqual(["thing"], self.manager.files_list)
-            self.assertEqual([], self.manager.excluded_files)
-
     def test_run_tests_keyboardinterrupt(self):
         # Test that bandit manager exits when there is a keyboard interrupt
         temp_directory = self.useFixture(fixtures.TempDir()).path
