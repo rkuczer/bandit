@@ -83,9 +83,7 @@ my_secret_password_for_email = 'd6s$f9g!j8mg7hw?n&2'
 
 # Possible hardcoded password: '1234'
 # Severity: Low   Confidence: Medium
-passphrase='1234'
+token='1234'
 
 
-#Possible hardcoded password: 'mysecretpassword'
-#Severity: Low Confidence: Mediums
-PASSWORD: Final[str] = "mysecretpassword"
+
