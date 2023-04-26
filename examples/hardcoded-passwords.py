@@ -1,5 +1,8 @@
 # Possible hardcoded password: 'class_password'
 # Severity: Low   Confidence: Medium
+from typing import Final
+
+
 class SomeClass:
     password = "class_password"
 
@@ -83,10 +86,6 @@ my_secret_password_for_email = 'd6s$f9g!j8mg7hw?n&2'
 passphrase='1234'
 
 
-#Possible hardcoded password: 'my_hardcoded_password'
+#Possible hardcoded password: 'mysecretpassword'
 #Severity: Low Confidence: Mediums
-pass22 = "my_hardcoded_password"
-
-
-# Possible hardcoded password: iP0F3@s&9H_l12@XvGhj
-pwd = ("DATABASE=TEST;HOSTNAME=127.0.0.0;PORT=50000;UID=login;PWD=iP0F3@s&9H_l12@XvGhj", "", "")
+PASSWORD: Final[str] = "mysecretpassword"
