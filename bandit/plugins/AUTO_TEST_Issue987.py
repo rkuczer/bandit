@@ -1,6 +1,7 @@
 import unittest
 import re
 from bandit.plugins.general_hardcoded_password import RE_WORDS, RE_CANDIDATES
+
 class TestRegex(unittest.TestCase):
     def test_RE_WORDS(self):
         # Test that RE_WORDS matches only complete words
