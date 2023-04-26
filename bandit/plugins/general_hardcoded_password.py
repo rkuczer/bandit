@@ -9,6 +9,9 @@ import bandit
 from bandit.core import issue
 from bandit.core import test_properties as test
 
+# These modifications ensure that the regular expressions match only complete words and not parts of words,
+# and also prevent false positives when searching for candidate strings that are part of larger words.
+
 RE_WORDS = r"\b(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)\b"
 RE_CANDIDATES = re.compile(
     r"(?<!\w)({0}$|_{0}_|^{0}_|_{0}$)".format(RE_WORDS), re.IGNORECASE
