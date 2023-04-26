@@ -10,8 +10,9 @@ from bandit.core import issue
 from bandit.core import test_properties as test
 
 RE_WORDS = r"\b(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)\b"
+
 RE_CANDIDATES = re.compile(
-    "(^{0}$|_{0}_|^{0}_|_{0}$)".format(RE_WORDS), re.IGNORECASE
+    r"(?<!\w)(^{0}$|_{0}_|^{0}_|_{0}$)".format(RE_WORDS), re.IGNORECASE
 )
 
 
