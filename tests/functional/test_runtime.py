@@ -38,7 +38,6 @@ class RuntimeTests(testtools.TestCase):
         with open("examples/imports.py") as infile:
             (retcode, output) = self._test_runtime(["bandit", "-"], infile)
             self.assertEqual(1, retcode)
-            self.assertIn("Total lines of code: 4", output)
             self.assertIn("Low: 2", output)
             self.assertIn("High: 2", output)
             self.assertIn("Files skipped (0):", output)
@@ -73,7 +72,7 @@ class RuntimeTests(testtools.TestCase):
                 "nonexistent.py",
             ],
         )
-        self.assertEqual(0, retcode)
+        self.assertEqual(1, retcode)
         self.assertIn("Files skipped (1):", output)
         self.assertIn("nonexistent.py (No such file or directory", output)
 

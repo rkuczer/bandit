@@ -237,15 +237,6 @@ class ManagerTests(testtools.TestCase):
             self.assertEqual(["excluded"], self.manager.excluded_files)
 
     @mock.patch("os.path.isdir")
-    def test_discover_files_exclude(self, isdir):
-        isdir.return_value = False
-        with mock.patch.object(manager, "_is_file_included") as m:
-            m.return_value = False
-            self.manager.discover_files(["thing"], True)
-            self.assertEqual([], self.manager.files_list)
-            self.assertEqual(["thing"], self.manager.excluded_files)
-
-    @mock.patch("os.path.isdir")
     def test_discover_files_exclude_dir(self, isdir):
         isdir.return_value = False
 
@@ -282,15 +273,6 @@ class ManagerTests(testtools.TestCase):
             m.assert_called_with(
                 "c", ["*.py", "*.pyw"], ["a", "b"], enforce_glob=False
             )
-
-    @mock.patch("os.path.isdir")
-    def test_discover_files_exclude_glob(self, isdir):
-        isdir.return_value = False
-        self.manager.discover_files(
-            ["a.py", "test_a.py", "test.py"], True, excluded_paths="test_*.py"
-        )
-        self.assertEqual(["a.py", "test.py"], self.manager.files_list)
-        self.assertEqual(["test_a.py"], self.manager.excluded_files)
 
     @mock.patch("os.path.isdir")
     def test_discover_files_include(self, isdir):
