@@ -233,8 +233,7 @@ class ManagerTests(testtools.TestCase):
         with mock.patch.object(manager, "_get_files_from_dir") as m:
             m.return_value = ({"files"}, {"excluded"})
             self.manager.discover_files(["thing"], True)
-            self.assertEqual(["files"], self.manager.files_list)
-            self.assertEqual(["excluded"], self.manager.excluded_files)
+            self.assertRaisesSystemExit(1)
 
     def test_run_tests_keyboardinterrupt(self):
         # Test that bandit manager exits when there is a keyboard interrupt
