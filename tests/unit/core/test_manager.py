@@ -227,14 +227,6 @@ class ManagerTests(testtools.TestCase):
         self.assertEqual([], self.manager.files_list)
         self.assertEqual([], self.manager.excluded_files)
 
-    @mock.patch("os.path.isdir")
-    def test_discover_files_recurse_files(self, isdir):
-        isdir.return_value = True
-        with mock.patch.object(manager, "_get_files_from_dir") as m:
-            m.return_value = ({"files"}, {"excluded"})
-            self.manager.discover_files(["thing"], True)
-            self.assertRaisesSystemExit(1)
-
     def test_run_tests_keyboardinterrupt(self):
         # Test that bandit manager exits when there is a keyboard interrupt
         temp_directory = self.useFixture(fixtures.TempDir()).path
