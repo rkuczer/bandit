@@ -1,30 +1,43 @@
 import unittest
+import ast
 import re
-from bandit.plugins.general_hardcoded_password import RE_WORDS, RE_CANDIDATES
 
-class TestRegex(unittest.TestCase):
-    def test_RE_WORDS(self):
-        # Test that RE_WORDS matches only complete words
-        pattern = re.compile(r"\b" + RE_WORDS + r"\b", re.IGNORECASE)
-        matches = pattern.findall("The password is 'password'")
-        self.assertEqual(matches, ['password'])
+from unittest.mock import patch, Mock
 
-        # Test that RE_WORDS does not match parts of words
-        matches = pattern.findall("The password is 'passcode'")
-        self.assertEqual(matches, [])
+from bandit.plugins.general_hardcoded_password import RE_WORDS, RE_CANDIDATES, hardcoded_password_string, \
+    hardcoded_password_funcarg
 
-    def test_RE_CANDIDATES(self):
-        # Test that RE_CANDIDATES matches only candidate strings that are not part of larger words
-        pattern = re.compile(
-            r"(?<!\w)(" + RE_WORDS + r"$|_" + RE_WORDS + r"_|^" + RE_WORDS + r"_|_" + RE_WORDS + r"$)",
-            re.IGNORECASE
-        )
-        matches = pattern.findall("The password is 'password'")
-        self.assertEqual(matches, ["'password'"])
 
-        # Test that RE_CANDIDATES does not match candidate strings that are part of larger words
-        matches = pattern.findall("The password is 'passcode'")
-        self.assertEqual(matches, [])
+class TestHardcodedPassword(unittest.TestCase):
+
+    def test_hardcoded_password_string(self):
+        node_mock = Mock()
+        node_mock._bandit_parent = ast.Assign()
+        node_mock.s = 'password'
+        node_mock._bandit_parent.targets = [ast.Name(id='password')]
+        with patch('file_to_test.RE_CANDIDATES', re.compile(
+                r"(\b(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)\b$|_(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)_|^_(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)_|_(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)_$)",
+                re.IGNORECASE)):
+            result = hardcoded_password_string(ast.parse('password').body[0].value)
+            self.assertIsNotNone(result)
+            self.assertEqual(result.severity, 'LOW')
+            self.assertEqual(result.confidence, 'MEDIUM')
+            self.assertEqual(result.cwe, '259')
+            self.assertEqual(result.text, "Possible hardcoded password: 'password'")
+
+    def test_hardcoded_password_funcarg(self):
+        node_mock = Mock()
+        node_mock._bandit_parent = ast.Call()
+        node_mock._bandit_parent.keywords = [ast.keyword(arg='password', value=ast.Str(s='secret'))]
+        node_mock._bandit_parent.args = []
+        node_mock._bandit_parent.func = ast.Name(id='some_function')
+        node_mock._bandit_parent.func.id = 'some_function'
+        with patch('file_to_test.RE_CANDIDATES', re.compile(
+                r"(\b(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)\b$|_(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)_|^_(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)_|_(pas+wo?r?d|pass(phrase)?|pwd|secrete|password|pass|to+k?en|conn?)_$)",
+                re.IGNORECASE)):
+            result = hardcoded_password_funcarg(node_mock)
+            self.assertIsNone(result)
+
 
 if __name__ == '__main__':
     unittest.main()

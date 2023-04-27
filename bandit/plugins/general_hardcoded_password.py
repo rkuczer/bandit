@@ -18,7 +18,6 @@ RE_CANDIDATES = re.compile(
 )
 
 
-
 def _report(value):
     return bandit.Issue(
         severity=bandit.LOW,
