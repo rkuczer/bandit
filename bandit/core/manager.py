@@ -206,6 +206,12 @@ class BanditManager:
         :param recursive: True/False - whether to add all files from dirs
         :return:
         """
+
+        for target in targets:
+            if not os.path.exists(target):
+                print(f"Error: {target} does not exist")
+                sys.exit(1)
+
         # We'll mantain a list of files which are added, and ones which have
         # been explicitly excluded
         files_list = set()

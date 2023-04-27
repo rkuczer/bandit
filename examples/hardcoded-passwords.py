@@ -3,10 +3,12 @@
 class SomeClass:
     password = "class_password"
 
+
 # Possible hardcoded password: 'Admin'
 # Severity: Low   Confidence: Medium
 def someFunction(user, password="Admin"):
     print("Hi " + user)
+
 
 def someFunction2(password):
     # Possible hardcoded password: 'root'
@@ -14,17 +16,13 @@ def someFunction2(password):
     if password == "root":
         print("OK, logged in")
 
-def noMatch(password):
-    # Possible hardcoded password: ''
-    # Severity: Low   Confidence: Medium
-    if password == '':
-        print("No password!")
 
 def NoMatch2(password):
     # Possible hardcoded password: 'ajklawejrkl42348swfgkg'
     # Severity: Low   Confidence: Medium
     if password == "ajklawejrkl42348swfgkg":
         print("Nice password!")
+
 
 def noMatchObject():
     obj = SomeClass()
@@ -33,13 +31,16 @@ def noMatchObject():
     if obj.password == "this cool password":
         print(obj.password)
 
+
 # Possible hardcoded password: 'blerg'
 # Severity: Low   Confidence: Medium
 def doLogin(password="blerg"):
     pass
 
+
 def NoMatch3(a, b):
     pass
+
 
 # Possible hardcoded password: 'blerg'
 # Severity: Low   Confidence: Medium
@@ -67,4 +68,4 @@ my_secret_password_for_email = 'd6s$f9g!j8mg7hw?n&2'
 
 # Possible hardcoded password: '1234'
 # Severity: Low   Confidence: Medium
-passphrase='1234'
+passphrase = '1234'

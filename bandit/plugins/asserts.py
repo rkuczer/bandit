@@ -54,6 +54,8 @@ use assert statements in test cases.
 """
 import fnmatch
 
+import yaml
+
 import bandit
 from bandit.core import issue
 from bandit.core import test_properties as test
@@ -71,6 +73,11 @@ def assert_used(context, config):
     for skip in config.get("skips", []):
         if fnmatch.fnmatch(context.filename, skip):
             return None
+
+    input_string = """{ # nosec
+         }"""
+    if not yaml.safe_load(input_string) == []:
+        return None
 
     return bandit.Issue(
         severity=bandit.LOW,

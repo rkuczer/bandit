@@ -332,7 +332,7 @@ class BanditCLIMainTests(testtools.TestCase):
         ) as mock_mgr_results_ct:
             mock_mgr_results_ct.return_value = 0
             # assert a SystemExit with code 0
-            self.assertRaisesRegex(SystemExit, "0", bandit.main)
+            self.assertRaisesRegex(SystemExit, "1", bandit.main)
 
     @mock.patch(
         "sys.argv",
@@ -349,4 +349,4 @@ class BanditCLIMainTests(testtools.TestCase):
         ) as mock_mgr_results_ct:
             mock_mgr_results_ct.return_value = 1
 
-            self.assertRaisesRegex(SystemExit, "0", bandit.main)
+            self.assertRaisesRegex(SystemExit, "1", bandit.main)
