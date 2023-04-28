@@ -25,26 +25,26 @@ class TestRegex(unittest.TestCase):
 class MyTestCase(unittest.TestCase):
     def test_complete_words(self):
         test_strings = [
-            'passwords',
-            'secretpassword',
-            'pword',
-            'secret',
-            'pas',
-            'token',
-            'connection',
-            'my password is secret',
-            'secrete'
+            "passwords",
+            "secretpassword",
+            "pword",
+            "secret",
+            "pas",
+            "token",
+            "connection",
+            "my password is secret",
+            "secrete",
         ]
         expected_result = [
-            'password',
-            'secrete',
-            'pwd',
-            'secret',
-            'pass',
-            'token',
-            'conn',
-            'password',
-            'secrete'
+            "password",
+            "secrete",
+            "pwd",
+            "secret",
+            "pass",
+            "token",
+            "conn",
+            "password",
+            "secrete",
         ]
 
         for index, string in enumerate(test_strings):
@@ -54,12 +54,12 @@ class MyTestCase(unittest.TestCase):
 
     def test_false_positives(self):
         test_strings = [
-            'passenger',
-            'compass',
-            'passport',
-            'complicated',
-            'passive',
-            'passworded'
+            "passenger",
+            "compass",
+            "passport",
+            "complicated",
+            "passive",
+            "passworded",
         ]
 
         for string in test_strings:
