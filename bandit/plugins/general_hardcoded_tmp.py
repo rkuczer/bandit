@@ -80,5 +80,3 @@ def hardcoded_tmp_directory(context, config):
             cwe=issue.Cwe.INSECURE_TEMP_FILE,
             text="Probable insecure usage of temp file/directory.",
         )
-
-

@@ -57,8 +57,8 @@ def exec_issue(level, members=""):
             confidence=bandit.LOW,
             cwe=issue.Cwe.PATH_TRAVERSAL,
             text="Usage of tarfile.extractall(members=function(tarfile)). "
-            "Make sure your function properly discards dangerous members "
-            "{members}).".format(members=members),
+                 "Make sure your function properly discards dangerous members "
+                 "{members}).".format(members=members),
         )
     elif level == bandit.MEDIUM:
         return bandit.Issue(
@@ -66,9 +66,9 @@ def exec_issue(level, members=""):
             confidence=bandit.MEDIUM,
             cwe=issue.Cwe.PATH_TRAVERSAL,
             text="Found tarfile.extractall(members=?) but couldn't "
-            "identify the type of members. "
-            "Check if the members were properly validated "
-            "{members}).".format(members=members),
+                 "identify the type of members. "
+                 "Check if the members were properly validated "
+                 "{members}).".format(members=members),
         )
     else:
         return bandit.Issue(
@@ -76,7 +76,7 @@ def exec_issue(level, members=""):
             confidence=bandit.HIGH,
             cwe=issue.Cwe.PATH_TRAVERSAL,
             text="tarfile.extractall used without any validation. "
-            "Please check and discard dangerous members.",
+                 "Please check and discard dangerous members.",
         )
 
 
@@ -95,10 +95,10 @@ def get_members_value(context):
 @test.checks("Call")
 def tarfile_unsafe_members(context):
     if all(
-        [
-            context.is_module_imported_exact("tarfile"),
-            "extractall" in context.call_function_name,
-        ]
+            [
+                context.is_module_imported_exact("tarfile"),
+                "extractall" in context.call_function_name,
+            ]
     ):
         if "members" in context.call_keywords:
             members = get_members_value(context)

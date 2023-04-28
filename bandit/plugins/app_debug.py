@@ -57,7 +57,7 @@ def flask_debug_true(context):
                     confidence=bandit.MEDIUM,
                     cwe=issue.Cwe.CODE_INJECTION,
                     text="A Flask app appears to be run with debug=True, "
-                    "which exposes the Werkzeug debugger and allows "
-                    "the execution of arbitrary code.",
+                         "which exposes the Werkzeug debugger and allows "
+                         "the execution of arbitrary code.",
                     lineno=context.get_lineno_for_call_arg("debug"),
                 )

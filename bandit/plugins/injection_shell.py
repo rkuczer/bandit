@@ -9,7 +9,6 @@ import bandit
 from bandit.core import issue
 from bandit.core import test_properties as test
 
-
 # yuck, regex: starts with a windows drive letter (eg C:)
 # or one of our path delimeter characters (/, \, .)
 full_path_match = re.compile(r"^(?:[A-Za-z](?=\:)|[\\\/\.])")
@@ -209,8 +208,8 @@ def subprocess_popen_with_shell_equals_true(context, config):
                         confidence=bandit.HIGH,
                         cwe=issue.Cwe.OS_COMMAND_INJECTION,
                         text="subprocess call with shell=True seems safe, but "
-                        "may be changed in the future, consider "
-                        "rewriting without shell",
+                             "may be changed in the future, consider "
+                             "rewriting without shell",
                         lineno=context.get_lineno_for_call_arg("shell"),
                     )
                 else:
@@ -219,7 +218,7 @@ def subprocess_popen_with_shell_equals_true(context, config):
                         confidence=bandit.HIGH,
                         cwe=issue.Cwe.OS_COMMAND_INJECTION,
                         text="subprocess call with shell=True identified, "
-                        "security issue.",
+                             "security issue.",
                         lineno=context.get_lineno_for_call_arg("shell"),
                     )
 
@@ -305,7 +304,7 @@ def subprocess_without_shell_equals_true(context, config):
                 confidence=bandit.HIGH,
                 cwe=issue.Cwe.OS_COMMAND_INJECTION,
                 text="subprocess call - check for execution of untrusted "
-                "input.",
+                     "input.",
                 lineno=context.get_lineno_for_call_arg("shell"),
             )
 
@@ -390,7 +389,7 @@ def any_other_function_with_shell_equals_true(context, config):
                 confidence=bandit.LOW,
                 cwe=issue.Cwe.OS_COMMAND_INJECTION,
                 text="Function call with shell=True parameter identified, "
-                "possible security issue.",
+                     "possible security issue.",
                 lineno=context.get_lineno_for_call_arg("shell"),
             )
 
@@ -483,8 +482,8 @@ def start_process_with_a_shell(context, config):
                     confidence=bandit.HIGH,
                     cwe=issue.Cwe.OS_COMMAND_INJECTION,
                     text="Starting a process with a shell: "
-                    "Seems safe, but may be changed in the future, "
-                    "consider rewriting without shell",
+                         "Seems safe, but may be changed in the future, "
+                         "consider rewriting without shell",
                 )
             else:
                 return bandit.Issue(
@@ -492,7 +491,7 @@ def start_process_with_a_shell(context, config):
                     confidence=bandit.HIGH,
                     cwe=issue.Cwe.OS_COMMAND_INJECTION,
                     text="Starting a process with a shell, possible injection"
-                    " detected, security issue.",
+                         " detected, security issue.",
                 )
 
 
@@ -674,9 +673,9 @@ def start_process_with_partial_path(context, config):
 
     if config and len(context.call_args):
         if (
-            context.call_function_name_qual in config["subprocess"]
-            or context.call_function_name_qual in config["shell"]
-            or context.call_function_name_qual in config["no_shell"]
+                context.call_function_name_qual in config["subprocess"]
+                or context.call_function_name_qual in config["shell"]
+                or context.call_function_name_qual in config["no_shell"]
         ):
 
             node = context.node.args[0]

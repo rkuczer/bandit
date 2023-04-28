@@ -69,7 +69,6 @@ SIMPLE_SQL_RE = re.compile(
 )
 
 
-
 def _check_string(data):
     sql_patterns = [
         r"(select\s.*from\s|"
@@ -93,14 +92,14 @@ def _evaluate_ast(node):
         wrapper = out[0]._bandit_parent
         statement = out[1]
     elif (
-        isinstance(node._bandit_parent, ast.Attribute)
-        and node._bandit_parent.attr == "format"
+            isinstance(node._bandit_parent, ast.Attribute)
+            and node._bandit_parent.attr == "format"
     ):
         statement = node.s
         # Hierarchy for "".format() is Wrapper -> Call -> Attribute -> Str
         wrapper = node._bandit_parent._bandit_parent._bandit_parent
     elif hasattr(ast, "JoinedStr") and isinstance(
-        node._bandit_parent, ast.JoinedStr
+            node._bandit_parent, ast.JoinedStr
     ):
         substrings = [
             child
@@ -115,14 +114,14 @@ def _evaluate_ast(node):
             statement = "".join([str(child.s) for child in substrings])
             wrapper = node._bandit_parent._bandit_parent
 
-    #if (
-            #isinstance(wrapper, ast.Call) and
-            #isinstance(wrapper.func, ast.Attribute) and
-            #wrapper.func.attr in ["execute", "executemany"]
-    #):
-        #return (True, statement)
-    #else:
-        #return (False, statement)
+    # if (
+    # isinstance(wrapper, ast.Call) and
+    # isinstance(wrapper.func, ast.Attribute) and
+    # wrapper.func.attr in ["execute", "executemany"]
+    # ):
+    # return (True, statement)
+    # else:
+    # return (False, statement)
 
     if isinstance(wrapper, ast.Call):  # wrapped in "execute" call?
         names = ["execute", "executemany"]
@@ -142,5 +141,5 @@ def hardcoded_sql_expressions(context):
             confidence=bandit.MEDIUM if val[0] else bandit.LOW,
             cwe=issue.Cwe.SQL_INJECTION,
             text="Possible SQL injection vector through string-based "
-            "query construction.",
+                 "query construction.",
         )

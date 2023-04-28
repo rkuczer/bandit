@@ -47,7 +47,6 @@ import bandit
 from bandit.core import issue
 from bandit.core import test_properties as test
 
-
 WEAK_HASHES = ("md4", "md5", "sha", "sha1")
 
 
@@ -66,7 +65,7 @@ def _hashlib_func(context):
                         confidence=bandit.HIGH,
                         cwe=issue.Cwe.BROKEN_CRYPTO,
                         text=f"Use of weak {func.upper()} hash for security. "
-                        "Consider usedforsecurity=False",
+                             "Consider usedforsecurity=False",
                         lineno=context.node.lineno,
                     )
             elif func == "new":
@@ -79,7 +78,7 @@ def _hashlib_func(context):
                             confidence=bandit.HIGH,
                             cwe=issue.Cwe.BROKEN_CRYPTO,
                             text=f"Use of weak {name.upper()} hash for "
-                            "security. Consider usedforsecurity=False",
+                                 "security. Consider usedforsecurity=False",
                             lineno=context.node.lineno,
                         )
 

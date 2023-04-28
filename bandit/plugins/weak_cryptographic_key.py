@@ -84,10 +84,11 @@ def _classify_key_size(config, key_type, key_size):
                     confidence=bandit.HIGH,
                     cwe=issue.Cwe.INADEQUATE_ENCRYPTION_STRENGTH,
                     text="%s key sizes below %d bits are considered breakable. "
-                    % (key_type, size),
+                         % (key_type, size),
                 )
     except IndexError:
         pass
+
 
 def _weak_crypto_key_size_cryptography_io(context, config):
     func_key_type = {
@@ -106,19 +107,19 @@ def _weak_crypto_key_size_cryptography_io(context, config):
     key_type = func_key_type.get(context.call_function_name_qual)
     if key_type in ["DSA", "RSA"]:
 
-        #try:
-            #key_size = (
-                    #context.get_call_arg_value("key_size")
-                    #or context.get_call_arg_at_position(arg_position[key_type])
-                    #or 2048
-            #)
-        #except IndexError:
-            #return None
+        # try:
+        # key_size = (
+        # context.get_call_arg_value("key_size")
+        # or context.get_call_arg_at_position(arg_position[key_type])
+        # or 2048
+        # )
+        # except IndexError:
+        # return None
 
         key_size = (
-            context.get_call_arg_value("key_size")
-            or context.get_call_arg_at_position(arg_position[key_type])
-            or 2048
+                context.get_call_arg_value("key_size")
+                or context.get_call_arg_at_position(arg_position[key_type])
+                or 2048
         )
         return _classify_key_size(config, key_type, key_size)
     elif key_type == "EC":
@@ -144,8 +145,8 @@ def _weak_crypto_key_size_cryptography_io(context, config):
             "SECT163R2": 163,
         }
         curve = context.get_call_arg_value("curve") or (
-            len(context.call_args) > arg_position[key_type]
-            and context.call_args[arg_position[key_type]]
+                len(context.call_args) > arg_position[key_type]
+                and context.call_args[arg_position[key_type]]
         )
         key_size = curve_key_sizes[curve] if curve in curve_key_sizes else 224
         return _classify_key_size(config, key_type, key_size)
@@ -161,9 +162,9 @@ def _weak_crypto_key_size_pycrypto(context, config):
     key_type = func_key_type.get(context.call_function_name_qual)
     if key_type:
         key_size = (
-            context.get_call_arg_value("bits")
-            or context.get_call_arg_at_position(0)
-            or 2048
+                context.get_call_arg_value("bits")
+                or context.get_call_arg_at_position(0)
+                or 2048
         )
         return _classify_key_size(config, key_type, key_size)
 

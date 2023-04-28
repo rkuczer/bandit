@@ -62,10 +62,10 @@ from bandit.core import test_properties as test
 
 def _stat_is_dangerous(mode):
     return (
-        mode & stat.S_IWOTH
-        or mode & stat.S_IWGRP
-        or mode & stat.S_IXGRP
-        or mode & stat.S_IXOTH
+            mode & stat.S_IWOTH
+            or mode & stat.S_IWGRP
+            or mode & stat.S_IXGRP
+            or mode & stat.S_IXOTH
     )
 
 
@@ -77,9 +77,9 @@ def set_bad_file_permissions(context):
             mode = context.get_call_arg_at_position(1)
 
             if (
-                mode is not None
-                and isinstance(mode, int)
-                and _stat_is_dangerous(mode)
+                    mode is not None
+                    and isinstance(mode, int)
+                    and _stat_is_dangerous(mode)
             ):
                 # world writable is an HIGH, group executable is a MEDIUM
                 if mode & stat.S_IWOTH:
@@ -95,5 +95,5 @@ def set_bad_file_permissions(context):
                     confidence=bandit.HIGH,
                     cwe=issue.Cwe.INCORRECT_PERMISSION_ASSIGNMENT,
                     text="Chmod setting a permissive mask %s on file (%s)."
-                    % (oct(mode), filename),
+                         % (oct(mode), filename),
                 )

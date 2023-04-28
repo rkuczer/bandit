@@ -46,14 +46,14 @@ def snmp_insecure_version_check(context):
     if context.call_function_name_qual == "pysnmp.hlapi.CommunityData":
         # We called community data. Lets check our args
         if context.check_call_arg_value(
-            "mpModel", 0
+                "mpModel", 0
         ) or context.check_call_arg_value("mpModel", 1):
             return bandit.Issue(
                 severity=bandit.MEDIUM,
                 confidence=bandit.HIGH,
                 cwe=issue.Cwe.CLEARTEXT_TRANSMISSION,
                 text="The use of SNMPv1 and SNMPv2 is insecure. "
-                "You should use SNMPv3 if able.",
+                     "You should use SNMPv3 if able.",
                 lineno=context.get_lineno_for_call_arg("CommunityData"),
             )
 
@@ -105,6 +105,6 @@ def snmp_crypto_check(context):
                 confidence=bandit.HIGH,
                 cwe=issue.Cwe.CLEARTEXT_TRANSMISSION,
                 text="You should not use SNMPv3 without encryption. "
-                "noAuthNoPriv & authNoPriv is insecure",
+                     "noAuthNoPriv & authNoPriv is insecure",
                 lineno=context.get_lineno_for_call_arg("UsmUserData"),
             )
