@@ -81,5 +81,9 @@ class MyTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-# test for omar's individual issue where A False Positive is flagged on a URL that doesn’t have any hardcoded password provided. The reason why this is happening Is because the variable that the URL is being passed to contains a word that is part of the Regular Expression when Bandit finds it,
-# the program flags a “Issue: [B105:hardcoded_password_string] Possible hardcoded password”
+# test for omar's individual issue where A False Positive is flagged on
+# a URL that doesn’t have any hardcoded password provided.
+# The reason why this is happening Is because the variable that
+# the URL is being passed to contains a word that is
+# part of the Regular Expression when Bandit finds it,
+# the program flags a “Issue: [B105:hardcoded_password_string]
