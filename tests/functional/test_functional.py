@@ -187,6 +187,7 @@ class FunctionalTests(testtools.TestCase):
             "CONFIDENCE": {"UNDEFINED": 0, "LOW": 0, "MEDIUM": 10, "HIGH": 0},
         }
         self.check_example("hardcoded-passwords.py", expect)
+
     # My test (Ryan) for my individual issue for checking a hardcoded password that is an empty string.
     def test_empty_hardcoded_password(self):
         expect = {
