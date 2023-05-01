@@ -17,7 +17,6 @@ def extract_strings(node):
 
 
 class TestExtractStrings(unittest.TestCase):
-
     def test_extract_strings(self):
         # Create a simple AST node with two string literals
         node = ast.parse("print('john,')\nprint('santore!')")
