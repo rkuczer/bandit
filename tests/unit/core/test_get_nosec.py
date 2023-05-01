@@ -39,4 +39,5 @@ if __name__ == "__main__":
 # Summary: nosec BXX- tells the program to ignore certain
 # issues or error; in this case security issues.
 # issue is if we use this notation in nested dictionary,
-# it may not work properly and will only ignore security issues for nested dict, not the whole dictionary
+# it may not work properly and will only ignore security
+# issues for nested dict, not the whole dictionary
