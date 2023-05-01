@@ -14,3 +14,6 @@ class TestAssertUsed(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+#test for fixes for the Multiline docstrings exclusion error #836 andit incorrectly marking an B101 assert used error with a  #nosec comment in this code assert yaml.load("""{ # nosec
+#         }""") == []
