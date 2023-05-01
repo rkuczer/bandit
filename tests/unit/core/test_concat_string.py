@@ -24,7 +24,8 @@ class TestExtractStrings(unittest.TestCase):
         result = extract_strings(node)
         # Verify that the result tuple contains the original node object
         self.assertEqual(result[0], node)
-        # Verify that the result tuple contains a string with both string literals
+        # Verify that the result tuple contains a string with both
+        # string literals
         self.assertEqual(result[1], "john, santore!")
 
 
