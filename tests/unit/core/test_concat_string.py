@@ -31,4 +31,5 @@ class TestExtractStrings(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 # Test for Warren's individual issue where the
-# concat strings function adds a space that should not be there
+# concat strings function adds a space that should
+# not be there
