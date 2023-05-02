@@ -226,7 +226,7 @@ def linerange(node):
         else:
             return list(
                 range(
-                    node.lineno, getattr(node, 'end_lineno', node.lineno) + 1
+                    node.lineno, getattr(node, "end_lineno", node.lineno) + 1
                 )
             )
     else:
