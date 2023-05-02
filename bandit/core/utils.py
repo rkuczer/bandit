@@ -224,7 +224,11 @@ def linerange(node):
         if isinstance(node, ast.Assert):
             return [node.lineno]
         else:
-            return list(range(node.lineno, getattr(node, 'end_lineno', node.lineno) + 1))
+            return list(
+                range(
+                    node.lineno, getattr(node, 'end_lineno', node.lineno) + 1
+                )
+            )
     else:
         if hasattr(node, "_bandit_linerange_stripped"):
             lines_minmax = node._bandit_linerange_stripped
@@ -273,7 +277,6 @@ def linerange(node):
             if delta > 1:
                 return list(range(start, node._bandit_sibling.lineno))
         return lines
-
 
 
 def concat_string(node, stop=None):
