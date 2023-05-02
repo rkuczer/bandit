@@ -16,3 +16,5 @@ class TestLineRange(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+# test that checks the linerange function
+# the function was updated that removes legacy code from python 3.7
