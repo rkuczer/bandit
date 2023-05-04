@@ -220,8 +220,15 @@ def calc_linerange(node):
 
 def linerange(node):
     """Get line number range from a node."""
-    if sys.version_info >= (3, 8) and hasattr(node, "lineno"):
-        return list(range(node.lineno, node.end_lineno + 1))
+    if hasattr(node, "lineno"):
+        if isinstance(node, ast.Assert):
+            return [node.lineno]
+        else:
+            return list(
+                range(
+                    node.lineno, getattr(node, "end_lineno", node.lineno) + 1
+                )
+            )
     else:
         if hasattr(node, "_bandit_linerange_stripped"):
             lines_minmax = node._bandit_linerange_stripped
@@ -302,7 +309,9 @@ def concat_string(node, stop=None):
         node = node._bandit_parent
     if isinstance(node, ast.BinOp):
         _get(node, bits, stop)
-    return (node, " ".join([x.s for x in bits if isinstance(x, ast.Str)]))
+    str_bits = [x.s for x in bits if isinstance(x, ast.Str)]
+    result = (node, " ".join(str_bits))
+    return result
 
 
 def get_called_name(node):

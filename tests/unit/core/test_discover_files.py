@@ -27,3 +27,5 @@ class TestManager(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+# test for fixes for Alex individual issue where bandit prints too
+# much information about issues even on a file that doesnt even exist.

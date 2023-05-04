@@ -32,3 +32,12 @@ class TestGetNosec(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+# test for fixes to the  Using # nosec BXXX annotation
+# in a nested dict causes "higher" annotations to be ignored #1003 where
+# Summary: Using a # nosec BXXX annotation inside a nested
+# data structure appears to cause "higher" nosec annotations to be ignored.
+# Summary: nosec BXX- tells the program to ignore certain
+# issues or error; in this case security issues.
+# issue is if we use this notation in nested dictionary,
+# it may not work properly and will only ignore security
+# issues for nested dict, not the whole dictionary
